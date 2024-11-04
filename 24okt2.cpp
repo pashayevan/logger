@@ -1,5 +1,7 @@
 #include <iostream>
 #include <utility>
+#include <exception>
+
 class Logger {
 private:
     inline static int counter = 0;
@@ -33,8 +35,30 @@ public:
         std::cout<<"~inherited Logger()\n";
     }
 };
+
+class C {
+private:
+    Logger x;
+public:
+    C() {
+        std::cout<<"C()\n";
+        Logger y;
+        throw std::exception();
+    }
+    ~C() {
+        std::cout<<"~C()\n";
+
+    }
+
+};
+
 void f(const Logger& x) {
     std::cout<<"void f\n";
+}
+void f() {
+    std::cout<<"f() func:\n";
+    Logger x;
+    throw std::exception();
 }
 int main() {
     /*
@@ -45,10 +69,25 @@ int main() {
     f(x);
     std::cout<<"Bye\n";
     */
-    //Logger x1;
+    //Logger xSSS1;
    // Logger x2=x1;
  //   Logger x3=Logger();
  //   Logger x4=std::move(x1);
    // x2=std::move(x1);
-    inheritedlogger();
+    //inheritedlogger();
+
+    try {
+        Logger x;
+        f();
+    }
+    catch(const std::exception& ex) {
+        std::cerr<<"something bad\n";
+        return 1;
+    }
+    try {
+        C c;
+    }
+    catch(const std::exception& ex) {
+        std::cout<<"Error\n;";
+    }
 }
